@@ -18,7 +18,7 @@ import streamlit as st
 #from sklearn.manifold import TSNE
 #from random import random, seed
 #from collections import OrderedDict
-#from gensim.models import Word2Vec
+from gensim.models import Word2Vec, FastText
 
 # FUNCTIONS:
 @st.cache()
