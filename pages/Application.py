@@ -507,9 +507,15 @@ if __name__ == '__main__':
           '02: 1921 - 1967',
           '01: 1921 - 1963'))
 
-        compounds = st.multiselect("", options=get_target_compounds(), default=get_target_compounds(), key='compounds_multiselect')
+        compounds = st.multiselect("Compounds to analyze", options=get_target_compounds(), key='compounds_multiselect')
         
-        user_input = st.text_input("Enter the words to be searched. For more than one word, separate them with a comma (,)", value='', key='words_search')
+        user_input = st.text_input("If you want to analyze new compounds, type them below separately with a comma (,)", value='', key='new_compounds')
+        if user_input != '':
+            for w in user_input.split(','):
+                if w.strip() not in compounds:
+                    compounds.append(w.strip())
+
+            compounds = sorted(compounds)
             
         submitted = st.form_submit_button('Apply settings')
         if submitted or st.session_state['execution_counter'] != 0:
