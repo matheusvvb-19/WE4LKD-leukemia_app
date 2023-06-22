@@ -507,7 +507,7 @@ if __name__ == '__main__':
           '02: 1921 - 1967',
           '01: 1921 - 1963'))
 
-        compounds = st.multiselect("", options=get_taregt_compounds(), default=get_target_compounds(), key='compounds_multiselect')
+        compounds = st.multiselect("", options=get_target_compounds(), default=get_target_compounds(), key='compounds_multiselect')
         
         user_input = st.text_input("Enter the words to be searched. For more than one word, separate them with a comma (,)", value='', key='words_search')
             
