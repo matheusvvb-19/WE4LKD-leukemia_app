@@ -507,36 +507,7 @@ if __name__ == '__main__':
           '02: 1921 - 1967',
           '01: 1921 - 1963'))
 
-        restrict_domain = st.selectbox("Restrict vocabulary domain:",
-        ('general', 'NCI cancer drugs', 'FDA drugs'))
-
-        if restrict_domain == 'general':
-            st.markdown('Filter vocabulary by entities:')
-            cellular = st.checkbox('Cellular')
-            dna_rna = st.checkbox('DNA/RNA')
-            drugs_chemicals = st.checkbox('Drugs/Chemicals')
-            proteins = st.checkbox('Proteins')
-
-            if (drugs_chemicals == False and dna_rna == False and proteins == False and cellular == False):
-                common_words_number = st.selectbox('Select the number of the most common words to remove from the view',
-                ('None', '5000', '10000', '15000', '20000'))       
-
-        dim_red = st.selectbox(
-         'Select the dimensionality reduction method',
-         ('TSNE','PCA'))
-
-        dimension = st.selectbox(
-             "Select the display dimension",
-             ('2D', '3D'))
-
         user_input = st.text_input("Enter the words to be searched. For more than one word, separate them with a comma (,)", value='', key='words_search')
-
-        top_n = st.slider('Select the neighborhood size',
-            5, 20, (5), 5)
-
-        annotation = st.radio(
-             "Dot plot labels",
-             ('On', 'Off'))  
             
         submitted = st.form_submit_button('Apply settings')
         if submitted or st.session_state['execution_counter'] != 0:
@@ -579,57 +550,11 @@ if __name__ == '__main__':
             elif loaded_model == '19: 1921 - 2022':
                 model = Word2Vec.load('./models_streamlit_app/model_1921_2022.model', mmap='r')
 
-            #model.init_sims()
-
-            if restrict_domain != 'general':
-                if restrict_domain == 'NCI cancer drugs':
-                    domains_table = read_domain_table()
-                    specific_domain = domains_table['name'].tolist()
-
-                elif restrict_domain == 'FDA drugs':
-                    specific_domain = read_fda_drugs_file()
-
-                restrict_w2v_model_vocab(model, set(specific_domain), True)
-                vocabulary_restricted = True
-
-            else:
-                if (drugs_chemicals or dna_rna or proteins or cellular):
-                    list_drugs_chemicals, list_dna_rna, list_proteins, list_cellular = create_entities_lists()
-                    entities_list = [list_drugs_chemicals, list_dna_rna, list_proteins, list_cellular]
-                    selected_entities = [drugs_chemicals, dna_rna, proteins, cellular]
-
-                    specific_domain = []
-                    for list_name, selected in zip(entities_list, selected_entities):
-                        if (selected == True):
-                            specific_domain.extend(list_name)
-
-                    restrict_w2v_model_vocab(model, set(specific_domain), True)
-
-                else:
-                    if common_words_number != 'None':
-                        common_words = get_most_common(int(common_words_number))
-                        restrict_w2v_model_vocab(model, set(common_words))
-
-                vocabulary_restricted = True   
-
-            if dim_red == 'TSNE':
-                perplexity = 5
-                learning_rate = 0.001
-                iteration = 250
-
-            else:
-                perplexity = 5
-                learning_rate = 0.001
-                iteration = 0    
-
         else:
             model = Word2Vec.load('./models_streamlit_app/model_1921_2022.model', mmap='r')
-            dim_red = 'TSNE'
             perplexity = 5
             learning_rate = 0.001
             iteration = 250
-            top_n = 5
-            annotation = 'On'
 
     reset_search = st.sidebar.button("Reset search", key='clear_session_button', on_click=clear_session_state, help='Delete all previous search record and start a new one')
     if reset_search:
@@ -637,7 +562,7 @@ if __name__ == '__main__':
         user_input = ''
 
     st.sidebar.header('GitHub Repository')
-    st.sidebar.markdown("[![Foo](https://cdn-icons-png.flaticon.com/32/25/25231.png)](https://github.com/matheusvvb-19/WE4LKD-leukemia_w2v)")
+    st.sidebar.markdown("[![Foo](https://cdn-icons-png.flaticon.com/32/25/25231.png)](https://github.com/matheusvvb-19/WE4LKD-leukemia_app)")
 
     header_container = st.container()
     with header_container:
